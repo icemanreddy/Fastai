@@ -6,7 +6,7 @@
 # uncomment for debugging
 # set -x
 
-if [ -z "$ami" ] || [ -z "$instanceType" ]; then
+if [[ -z "$ami" ]] || [[ -z "$instanceType" ]]; then
     echo "Missing \$ami or \$instanceType; this script should be called from"
     echo "setup_t2.sh or setup_p2.sh!"
     exit 1
@@ -17,12 +17,12 @@ export name="fast-ai"
 export cidr="0.0.0.0/0"
 
 hash aws 2>/dev/null
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     echo >&2 "'aws' command line tool required, but not installed.  Aborting."
     exit 1
 fi
 
-if [ -z "$(aws configure get aws_access_key_id)" ]; then
+if [[ -z "$(aws configure get aws_access_key_id)" ]]; then
     echo "AWS credentials not configured.  Aborting"
     exit 1
 fi
@@ -50,12 +50,12 @@ aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol 
 # jupyter notebook
 aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol tcp --port 8888-8898 --cidr $cidr
 
-if [ ! -d ~/.ssh ]
+if [[ ! -d ~/.ssh ]]
 then
 	mkdir ~/.ssh
 fi
 
-if [ ! -f ~/.ssh/aws-key-$name.pem ]
+if [[ ! -f ~/.ssh/aws-key-$name.pem ]]
 then
 	aws ec2 create-key-pair --key-name aws-key-$name --query 'KeyMaterial' --output text > ~/.ssh/aws-key-$name.pem
 	chmod 400 ~/.ssh/aws-key-$name.pem
